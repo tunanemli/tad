@@ -1,0 +1,196 @@
+<div class="grid">
+    <!-- API Test Form -->
+    <div class="card">
+        <h2>📡 API Test Arayüzü</h2>
+        <p style="color: #7f8c8d; margin-bottom: 20px;">
+            REST API endpoint'lerini test etmek için bu formu kullanın.
+        </p>
+        
+        <form id="apiTestForm">
+            <div class="form-group">
+                <label for="method">🌐 HTTP Metodu:</label>
+                <select id="method" name="method" class="form-control" required>
+                    <option value="GET">GET - Veri Okuma</option>
+                    <option value="POST">POST - Veri Oluşturma</option>
+                    <option value="PUT">PUT - Veri Güncelleme</option>
+                    <option value="PATCH">PATCH - Kısmi Güncelleme</option>
+                    <option value="DELETE">DELETE - Veri Silme</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="endpoint">🎯 Endpoint:</label>
+                <input type="text" id="endpoint" name="endpoint" class="form-control" required
+                       placeholder="Örnek: users/123 veya products"
+                       value="test/hello">
+            </div>
+            
+            <div class="form-group" id="bodyGroup" style="display: none;">
+                <label for="requestBody">📋 Request Body (JSON):</label>
+                <textarea id="requestBody" name="requestBody" class="form-control" rows="6"
+                          placeholder='{"key": "value", "number": 123}'></textarea>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    🚀 API İsteği Gönder
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Token Status -->
+    <div class="card">
+        <h2>🔐 Token Durumu</h2>
+        <div id="statusDisplay">
+            <div class="status warning">⏳ Token durumu kontrol ediliyor...</div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <a href="/web/auth" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">
+                🔑 Yeni Token Al
+            </a>
+            <button type="button" id="clearToken" class="btn btn-danger" style="width: 100%;">
+                🗑️ Token Temizle
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Response Area -->
+<div class="card">
+    <h2>📊 API Yanıtı</h2>
+    <div id="responseArea" class="response-area">
+        API isteği yapıldığında yanıt burada görünecek...
+    </div>
+</div>
+
+<!-- HTTP Methods Guide -->
+<div class="card">
+    <h2>📚 HTTP Metodları Kılavuzu</h2>
+    
+    <div class="grid">
+        <div>
+            <h3 style="color: #3498db;">🔍 GET</h3>
+            <p style="color: #555;">Veri okuma işlemleri için kullanılır.</p>
+            <div class="code">
+GET /api/data/users
+GET /api/data/products/123</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #27ae60;">➕ POST</h3>
+            <p style="color: #555;">Yeni veri oluşturma işlemleri için kullanılır.</p>
+            <div class="code">
+POST /api/data/users
+Body: {"name": "John", "email": "john@example.com"}</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #e67e22;">✏️ PUT</h3>
+            <p style="color: #555;">Var olan veriyi tamamen güncelleme için kullanılır.</p>
+            <div class="code">
+PUT /api/data/users/123
+Body: {"name": "John Updated", "email": "john.new@example.com"}</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #9b59b6;">🔧 PATCH</h3>
+            <p style="color: #555;">Var olan veriyi kısmen güncelleme için kullanılır.</p>
+            <div class="code">
+PATCH /api/data/users/123
+Body: {"email": "john.new@example.com"}</div>
+        </div>
+    </div>
+</div>
+
+<!-- C# Method Mapping -->
+<div class="card">
+    <h2>🔄 C# Metod Eşleştirmeleri</h2>
+    
+    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+        <div>
+            <h3 style="color: #e74c3c; margin-bottom: 15px;">🔴 C# Orijinal Metodlar</h3>
+            <div class="code">
+// GET İsteği
+string result = HttpGet(url, accessToken);
+
+// POST İsteği  
+string result = HttpPost(url, param, accessToken);
+
+// PUT İsteği
+string result = HttpPut(url, param, accessToken);
+
+// PATCH İsteği
+string result = HttpPatch(url, param, accessToken);</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #27ae60; margin-bottom: 15px;">🟢 NestJS API Endpoints</h3>
+            <div class="code">
+// GET İsteği
+GET /api/data/{endpoint}
+
+// POST İsteği
+POST /api/data/{endpoint}
+
+// PUT İsteği  
+PUT /api/data/{endpoint}
+
+// PATCH İsteği
+PATCH /api/data/{endpoint}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Example Requests -->
+<div class="card">
+    <h2>💡 Örnek İstekler</h2>
+    
+    <div style="margin-bottom: 20px;">
+        <h3 style="color: #3498db;">1️⃣ Kullanıcı Listesi</h3>
+        <button onclick="fillExample('GET', 'users', '')" class="btn btn-primary">Formu Doldur</button>
+        <div class="code">GET /api/data/users</div>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+        <h3 style="color: #27ae60;">2️⃣ Yeni Kullanıcı Oluştur</h3>
+        <button onclick="fillExample('POST', 'users', '{\"name\": \"Ahmet Yılmaz\", \"email\": \"ahmet@example.com\"}')" class="btn btn-success">Formu Doldur</button>
+        <div class="code">POST /api/data/users
+Body: {"name": "Ahmet Yılmaz", "email": "ahmet@example.com"}</div>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+        <h3 style="color: #e67e22;">3️⃣ Kullanıcı Güncelle</h3>
+        <button onclick="fillExample('PUT', 'users/123', '{\"name\": \"Ahmet Yılmaz Güncel\", \"email\": \"ahmet.new@example.com\"}')" class="btn btn-warning">Formu Doldur</button>
+        <div class="code">PUT /api/data/users/123
+Body: {"name": "Ahmet Yılmaz Güncel", "email": "ahmet.new@example.com"}</div>
+    </div>
+    
+    <div>
+        <h3 style="color: #e74c3c;">4️⃣ Kullanıcı Sil</h3>
+        <button onclick="fillExample('DELETE', 'users/123', '')" class="btn btn-danger">Formu Doldur</button>
+        <div class="code">DELETE /api/data/users/123</div>
+    </div>
+</div>
+
+<script>
+function fillExample(method, endpoint, body) {
+    document.getElementById('method').value = method;
+    document.getElementById('endpoint').value = endpoint;
+    
+    const bodyGroup = document.getElementById('bodyGroup');
+    const requestBody = document.getElementById('requestBody');
+    
+    if (['POST', 'PUT', 'PATCH'].includes(method)) {
+        bodyGroup.style.display = 'block';
+        requestBody.value = body;
+    } else {
+        bodyGroup.style.display = 'none';
+        requestBody.value = '';
+    }
+    
+    // Trigger change event
+    document.getElementById('method').dispatchEvent(new Event('change'));
+}
+</script>

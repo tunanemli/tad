@@ -1,0 +1,345 @@
+<div class="grid">
+    <!-- Logo API Test Form -->
+    <div class="card">
+        <h2>🏢 Logo REST API Test</h2>
+        <p style="color: #7f8c8d; margin-bottom: 20px;">
+            C# dokümantasyonundaki GET işlemlerini test edin.
+        </p>
+        
+        <form id="logoTestForm">
+            <div class="form-group">
+                <label for="logoEndpoint">📊 Data Nesnesi:</label>
+                <select id="logoEndpoint" name="logoEndpoint" class="form-control" required>
+                    <option value="items">Items - Malzeme Kartları</option>
+                    <option value="accounts">Accounts - Cari Kartlar</option>
+                    <option value="orders">Orders - Sipariş Fişleri</option>
+                    <option value="invoices">Invoices - Fatura Fişleri</option>
+                    <option value="custom">Özel Endpoint</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="customEndpointGroup" style="display: none;">
+                <label for="customEndpoint">🎯 Özel Endpoint:</label>
+                <input type="text" id="customEndpoint" name="customEndpoint" class="form-control"
+                       placeholder="Örnek: products, customers, etc.">
+            </div>
+            
+            <div class="form-group">
+                <label for="operationType">⚙️ İşlem Tipi:</label>
+                <select id="operationType" name="operationType" class="form-control" required>
+                    <option value="list">Liste (Pagination ile)</option>
+                    <option value="single">Tek Kayıt (ID ile)</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="recordIdGroup" style="display: none;">
+                <label for="recordId">🆔 Kayıt ID:</label>
+                <input type="number" id="recordId" name="recordId" class="form-control"
+                       placeholder="Örnek: 5" min="1">
+            </div>
+            
+            <!-- Pagination Controls -->
+            <div id="paginationGroup">
+                <h3 style="color: #3498db; margin: 20px 0 15px 0;">📄 Sayfalama (Pagination)</h3>
+                
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="form-group">
+                        <label for="offset">📍 Offset (Başlangıç):</label>
+                        <input type="number" id="offset" name="offset" class="form-control"
+                               placeholder="0" min="0" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="limit">📊 Limit (Sayfa Boyutu):</label>
+                        <input type="number" id="limit" name="limit" class="form-control"
+                               placeholder="10" min="1" max="100" value="10">
+                    </div>
+                </div>
+                
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="form-group">
+                        <label for="search">🔍 Arama:</label>
+                        <input type="text" id="search" name="search" class="form-control"
+                               placeholder="Arama terimi">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orderBy">📈 Sıralama:</label>
+                        <input type="text" id="orderBy" name="orderBy" class="form-control"
+                               placeholder="name ASC, id DESC">
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    🚀 Logo API Test Et
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Token Status & Quick Actions -->
+    <div class="card">
+        <h2>🔐 Token & Durum</h2>
+        <div id="statusDisplay">
+            <div class="status warning">⏳ Token durumu kontrol ediliyor...</div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <a href="/web/auth" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">
+                🔑 Yeni Token Al
+            </a>
+            <button type="button" id="clearToken" class="btn btn-danger" style="width: 100%;">
+                🗑️ Token Temizle
+            </button>
+        </div>
+        
+        <h3 style="color: #e67e22; margin: 20px 0 15px 0;">⚡ Hızlı Test</h3>
+        <div class="grid" style="grid-template-columns: 1fr;">
+            <button onclick="quickTest('items', 0, 5)" class="btn btn-warning" style="margin-bottom: 10px;">
+                📦 İlk 5 Malzeme Kartı
+            </button>
+            <button onclick="quickTest('items', 5, 5)" class="btn btn-warning" style="margin-bottom: 10px;">
+                📦 Sonraki 5 Malzeme Kartı
+            </button>
+            <button onclick="singleTest('items', 1)" class="btn btn-warning" style="margin-bottom: 10px;">
+                📋 Malzeme Kartı ID:1
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Response Area -->
+<div class="card">
+    <h2>📊 API Yanıtı</h2>
+    <div id="responseArea" class="response-area">
+        Logo API isteği yapıldığında yanıt burada görünecek...
+    </div>
+    
+    <div style="margin-top: 15px;">
+        <button onclick="copyToClipboard(document.getElementById('responseArea').textContent)" 
+                class="btn btn-warning">
+            📋 Yanıtı Kopyala
+        </button>
+    </div>
+</div>
+
+<!-- Documentation & Examples -->
+<div class="card">
+    <h2>📚 C# Karşılaştırma ve Örnekler</h2>
+    
+    <div class="grid">
+        <div>
+            <h3 style="color: #e74c3c; margin-bottom: 15px;">🔴 C# Orijinal Kod</h3>
+            <div class="code">
+// Malzeme kartları listesi
+string result = HttpGet(
+    "http://172.16.57.114:32001/api/v1/items", 
+    accessToken
+);
+
+// Sayfalama ile
+string result = HttpGet(
+    "http://172.16.57.114:32001/api/v1/items?offset=10&limit=20", 
+    accessToken
+);
+
+// Tek kayıt okuma
+string result = HttpGet(
+    "http://172.16.57.114:32001/api/v1/items/5", 
+    accessToken
+);</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #27ae60; margin-bottom: 15px;">🟢 NestJS Endpoint'leri</h3>
+            <div class="code">
+// Malzeme kartları listesi
+GET /logo/items
+
+// Sayfalama ile
+GET /logo/items?offset=10&limit=20
+
+// Tek kayıt okuma
+GET /logo/items/5
+
+// Diğer endpoint'ler
+GET /logo/accounts
+GET /logo/orders  
+GET /logo/invoices</div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <h3 style="color: #3498db;">📄 Sayfalama Parametreleri</h3>
+        <ul style="margin-left: 20px; color: #555;">
+            <li><strong>offset:</strong> Kaçıncı kayıttan başlanacak (varsayılan: 0)</li>
+            <li><strong>limit:</strong> Kaç kayıt getirilecek (varsayılan: 10, max: 100)</li>
+            <li><strong>search:</strong> Arama terimi (opsiyonel)</li>
+            <li><strong>orderBy:</strong> Sıralama kriteri (opsiyonel)</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Available Endpoints -->
+<div class="card">
+    <h2>🌐 Mevcut Logo API Endpoint'leri</h2>
+    
+    <div class="grid">
+        <div>
+            <h3 style="color: #9b59b6;">📦 Malzeme İşlemleri</h3>
+            <div class="code">
+GET /logo/items           # Liste
+GET /logo/items/5         # Tek kayıt
+GET /logo/items?offset=10&limit=20
+</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #1abc9c;">👥 Cari İşlemleri</h3>
+            <div class="code">
+GET /logo/accounts        # Liste
+GET /logo/accounts/5      # Tek kayıt
+GET /logo/accounts?search=ahmet
+</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #f39c12;">📋 Sipariş İşlemleri</h3>
+            <div class="code">
+GET /logo/orders          # Liste
+GET /logo/orders/5        # Tek kayıt
+GET /logo/orders?orderBy=date DESC
+</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #e74c3c;">🧾 Fatura İşlemleri</h3>
+            <div class="code">
+GET /logo/invoices        # Liste
+GET /logo/invoices/5      # Tek kayıt
+GET /logo/invoices?limit=50
+</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Logo test form handler
+document.getElementById('logoTestForm').addEventListener('submit', handleLogoTestSubmit);
+document.getElementById('logoEndpoint').addEventListener('change', handleEndpointChange);
+document.getElementById('operationType').addEventListener('change', handleOperationTypeChange);
+
+async function handleLogoTestSubmit(e) {
+    e.preventDefault();
+    
+    if (!accessToken || isTokenExpired()) {
+        showError('Önce giriş yapmanız gerekiyor!');
+        return;
+    }
+
+    const formData = new FormData(e.target);
+    const endpoint = formData.get('logoEndpoint');
+    const customEndpoint = formData.get('customEndpoint');
+    const operationType = formData.get('operationType');
+    const recordId = formData.get('recordId');
+    
+    const finalEndpoint = endpoint === 'custom' ? customEndpoint : endpoint;
+    
+    if (!finalEndpoint) {
+        showError('Endpoint seçiniz!');
+        return;
+    }
+
+    try {
+        showLoading('Logo API isteği gönderiliyor...');
+        
+        let url;
+        if (operationType === 'single') {
+            if (!recordId) {
+                showError('Tek kayıt için ID giriniz!');
+                return;
+            }
+            url = `/logo/${finalEndpoint}/${recordId}`;
+        } else {
+            // Liste işlemi - query parametreleri ekle
+            const params = new URLSearchParams();
+            
+            const offset = formData.get('offset');
+            const limit = formData.get('limit');
+            const search = formData.get('search');
+            const orderBy = formData.get('orderBy');
+            
+            if (offset) params.append('offset', offset);
+            if (limit) params.append('limit', limit);
+            if (search) params.append('search', search);
+            if (orderBy) params.append('orderBy', orderBy);
+            
+            const queryString = params.toString();
+            url = `/logo/${finalEndpoint}${queryString ? '?' + queryString : ''}`;
+        }
+
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        });
+
+        const result = await response.text();
+        displayResponse(response.status, response.statusText, result);
+        
+        if (response.ok) {
+            showSuccess('Logo API isteği başarılı!');
+        } else {
+            showWarning(`Logo API isteği tamamlandı (${response.status})`);
+        }
+        
+    } catch (error) {
+        showError('Logo API isteği başarısız: ' + error.message);
+        displayResponse(0, 'Error', error.message);
+    }
+}
+
+function handleEndpointChange(e) {
+    const customGroup = document.getElementById('customEndpointGroup');
+    if (e.target.value === 'custom') {
+        customGroup.style.display = 'block';
+    } else {
+        customGroup.style.display = 'none';
+    }
+}
+
+function handleOperationTypeChange(e) {
+    const recordIdGroup = document.getElementById('recordIdGroup');
+    const paginationGroup = document.getElementById('paginationGroup');
+    
+    if (e.target.value === 'single') {
+        recordIdGroup.style.display = 'block';
+        paginationGroup.style.display = 'none';
+    } else {
+        recordIdGroup.style.display = 'none';
+        paginationGroup.style.display = 'block';
+    }
+}
+
+// Quick test functions
+function quickTest(endpoint, offset, limit) {
+    document.getElementById('logoEndpoint').value = endpoint;
+    document.getElementById('operationType').value = 'list';
+    document.getElementById('offset').value = offset;
+    document.getElementById('limit').value = limit;
+    
+    handleOperationTypeChange({target: {value: 'list'}});
+    document.getElementById('logoTestForm').dispatchEvent(new Event('submit'));
+}
+
+function singleTest(endpoint, id) {
+    document.getElementById('logoEndpoint').value = endpoint;
+    document.getElementById('operationType').value = 'single';
+    document.getElementById('recordId').value = id;
+    
+    handleOperationTypeChange({target: {value: 'single'}});
+    document.getElementById('logoTestForm').dispatchEvent(new Event('submit'));
+}
+</script>

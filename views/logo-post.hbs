@@ -1,0 +1,608 @@
+<div class="grid">
+    <!-- POST Operation Selector -->
+    <div class="card">
+        <h2>➕ Logo REST API - POST İşlemleri</h2>
+        <p style="color: #7f8c8d; margin-bottom: 20px;">
+            C# dokümantasyonundaki POST örneklerini test edin.
+        </p>
+        
+        <form id="logoPostForm">
+            <div class="form-group">
+                <label for="postOperation">📊 POST İşlemi:</label>
+                <select id="postOperation" name="postOperation" class="form-control" required>
+                    <option value="salesOrder">Sales Order - Satış Siparişi (C# Örneği)</option>
+                    <option value="item">Item - Malzeme Kartı</option>
+                    <option value="account">Account - Cari Kart</option>
+                    <option value="custom">Özel JSON - Manuel Test</option>
+                </select>
+            </div>
+            
+            <!-- Sales Order Form -->
+            <div id="salesOrderForm" class="operation-form">
+                <h3 style="color: #e74c3c; margin: 20px 0 15px 0;">🛒 Satış Siparişi Oluşturma</h3>
+                
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="form-group">
+                        <label for="arpCode">👤 Cari Kod (ARP_CODE):</label>
+                        <input type="text" id="arpCode" name="arpCode" class="form-control"
+                               placeholder="CARI.01" value="CARI.01" required data-was-required="true">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orderDate">📅 Tarih (DATE):</label>
+                        <input type="date" id="orderDate" name="orderDate" class="form-control" required data-was-required="true">
+                    </div>
+                </div>
+                
+                <h4 style="color: #3498db; margin: 15px 0 10px 0;">📦 Sipariş Satırları</h4>
+                <div id="orderLines">
+                    <div class="order-line" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px;">
+                        <div class="grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+                            <div class="form-group">
+                                <label>🏷️ Malzeme Kodu:</label>
+                                <input type="text" name="masterCode" class="form-control" 
+                                       placeholder="MALZEME.02" value="MALZEME.02" required data-was-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label>📊 Miktar:</label>
+                                <input type="number" name="quantity" class="form-control" 
+                                       placeholder="5" value="5" min="1" required data-was-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label>💰 Fiyat:</label>
+                                <input type="number" name="price" class="form-control" 
+                                       placeholder="10" value="10" min="0" step="0.01" required data-was-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label>📈 KDV Oranı (%):</label>
+                                <input type="number" name="vatRate" class="form-control" 
+                                       placeholder="18" value="18" min="0" max="100" required data-was-required="true">
+                            </div>
+                        </div>
+                        <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="form-group">
+                                <label>📏 Birim:</label>
+                                <input type="text" name="unitCode" class="form-control" 
+                                       placeholder="ADET" value="ADET" required data-was-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label>🔢 Birim Çevrim 1:</label>
+                                <input type="number" name="unitConv1" class="form-control" 
+                                       placeholder="1" value="1" min="0" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>🔢 Birim Çevrim 2:</label>
+                                <input type="number" name="unitConv2" class="form-control" 
+                                       placeholder="1" value="1" min="0" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" onclick="addOrderLine()" class="btn btn-warning" style="margin-bottom: 20px;">
+                    ➕ Yeni Satır Ekle
+                </button>
+            </div>
+            
+            <!-- Item Form -->
+            <div id="itemForm" class="operation-form" style="display: none;">
+                <h3 style="color: #27ae60; margin: 20px 0 15px 0;">📦 Malzeme Kartı Oluşturma</h3>
+                
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="form-group">
+                        <label for="itemCode">🏷️ Malzeme Kodu:</label>
+                        <input type="text" id="itemCode" name="itemCode" class="form-control"
+                               placeholder="MAL001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemName">📝 Malzeme Adı:</label>
+                        <input type="text" id="itemName" name="itemName" class="form-control"
+                               placeholder="Örnek Malzeme">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemUnit">📏 Birim:</label>
+                        <input type="text" id="itemUnit" name="itemUnit" class="form-control"
+                               placeholder="ADET" value="ADET">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemVat">📈 KDV Oranı (%):</label>
+                        <input type="number" id="itemVat" name="itemVat" class="form-control"
+                               placeholder="18" value="18" min="0" max="100">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Account Form -->
+            <div id="accountForm" class="operation-form" style="display: none;">
+                <h3 style="color: #9b59b6; margin: 20px 0 15px 0;">👥 Cari Kart Oluşturma</h3>
+                
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="form-group">
+                        <label for="accountCode">🏷️ Cari Kod:</label>
+                        <input type="text" id="accountCode" name="accountCode" class="form-control"
+                               placeholder="CARI001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accountName">📝 Cari Unvan:</label>
+                        <input type="text" id="accountName" name="accountName" class="form-control"
+                               placeholder="Örnek Firma Ltd. Şti.">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accountCity">🏙️ Şehir:</label>
+                        <input type="text" id="accountCity" name="accountCity" class="form-control"
+                               placeholder="İstanbul">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accountType">🏢 Tip:</label>
+                        <select id="accountType" name="accountType" class="form-control">
+                            <option value="0">Müşteri</option>
+                            <option value="1">Satıcı</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Custom JSON Form -->
+            <div id="customForm" class="operation-form" style="display: none;">
+                <h3 style="color: #e67e22; margin: 20px 0 15px 0;">🔧 Özel JSON Test</h3>
+                
+                <div class="form-group">
+                    <label for="customEndpoint">🎯 Endpoint:</label>
+                    <input type="text" id="customEndpoint" name="customEndpoint" class="form-control"
+                           placeholder="salesOrders, items, accounts, etc.">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customJson">📋 JSON Data:</label>
+                    <textarea id="customJson" name="customJson" class="form-control" rows="10"
+                              placeholder='{"CODE": "TEST001", "NAME": "Test Item"}'></textarea>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-bottom: 10px;">
+                    🚀 POST İsteği Gönder
+                </button>
+                <button type="button" id="getFullDataBtn" class="btn btn-warning" style="width: 100%; display: none;">
+                    📊 Detaylı Veri Oku (expandLevel=full)
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Token Status -->
+    <div class="card">
+        <h2>🔐 Token & Durum</h2>
+        <div id="statusDisplay">
+            <div class="status warning">⏳ Token durumu kontrol ediliyor...</div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <a href="/web/auth" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">
+                🔑 Yeni Token Al
+            </a>
+            <button type="button" id="clearToken" class="btn btn-danger" style="width: 100%;">
+                🗑️ Token Temizle
+            </button>
+        </div>
+        
+        <h3 style="color: #3498db; margin: 20px 0 15px 0;">📊 Son İşlem Bilgisi</h3>
+        <div id="lastOperation" style="background: #f8f9fa; padding: 15px; border-radius: 5px; min-height: 60px;">
+            POST işlemi yapıldığında bilgiler burada görünecek...
+        </div>
+    </div>
+</div>
+
+<!-- Response Area -->
+<div class="card">
+    <h2>📊 API Yanıtı</h2>
+    <div id="responseArea" class="response-area">
+        POST isteği yapıldığında yanıt burada görünecek...
+    </div>
+    
+    <div style="margin-top: 15px;">
+        <button onclick="copyToClipboard(document.getElementById('responseArea').textContent)" 
+                class="btn btn-warning">
+            📋 Yanıtı Kopyala
+        </button>
+    </div>
+</div>
+
+<!-- C# vs NestJS Comparison -->
+<div class="card">
+    <h2>🔄 C# POST Örneği vs NestJS</h2>
+    
+    <div class="grid">
+        <div>
+            <h3 style="color: #e74c3c; margin-bottom: 15px;">🔴 C# Orijinal Kod</h3>
+            <div class="code">
+string orderSlip = "{"
++ "  \"INTERNAL_REFERENCE\": 0,"
++ "  \"NUMBER\": \"~\","
++ "  \"DATE\": \"02.05.2016\","
++ "  \"TIME\": 102581337,"
++ "  \"ARP_CODE\": \"CARI.01\","
++ "  \"CURRSEL_TOTAL\": 1,"
++ "  \"TRANSACTIONS\": {"
++ "    \"items\": ["
++ "      {"
++ "        \"TYPE\": 0,"
++ "        \"MASTER_CODE\": \"MALZEME.02\","
++ "        \"QUANTITY\": 5,"
++ "        \"PRICE\": 10,"
++ "        \"VAT_RATE\": 18,"
++ "        \"UNIT_CODE\": \"ADET\","
++ "        \"UNIT_CONV1\": 1,"
++ "        \"UNIT_CONV2\": 1,"
++ "        \"EDT_CURR\": 1"
++ "      }"
++ "    ]"
++ "  }"
++ "}";
+
+resp = HttpPost(
+    "http://172.16.57.114:32001/api/v1/salesOrders", 
+    orderSlip, 
+    accessToken
+);</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #27ae60; margin-bottom: 15px;">🟢 NestJS Endpoint</h3>
+            <div class="code">
+// NestJS POST endpoint
+POST /logo/salesOrders
+
+// Request Body (JSON)
+{
+  "INTERNAL_REFERENCE": 0,
+  "NUMBER": "~",
+  "DATE": "2024-01-30",
+  "ARP_CODE": "CARI.01",
+  "CURRSEL_TOTAL": 1,
+  "TRANSACTIONS": {
+    "items": [
+      {
+        "TYPE": 0,
+        "MASTER_CODE": "MALZEME.02",
+        "QUANTITY": 5,
+        "PRICE": 10,
+        "VAT_RATE": 18,
+        "UNIT_CODE": "ADET",
+        "UNIT_CONV1": 1,
+        "UNIT_CONV2": 1,
+        "EDT_CURR": 1
+      }
+    ]
+  }
+}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Available POST Endpoints -->
+<div class="card">
+    <h2>🌐 Mevcut POST Endpoint'leri</h2>
+    
+    <div class="grid">
+        <div>
+            <h3 style="color: #e74c3c;">🛒 Sipariş İşlemleri</h3>
+            <div class="code">
+POST /logo/salesOrders   # Satış siparişi
+POST /logo/orders        # Alternatif endpoint
+</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #27ae60;">📦 Malzeme İşlemleri</h3>
+            <div class="code">
+POST /logo/items         # Malzeme kartı
+</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #9b59b6;">👥 Cari İşlemleri</h3>
+            <div class="code">
+POST /logo/accounts      # Cari kart
+</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #e67e22;">🔧 Genel</h3>
+            <div class="code">
+POST /logo/data/{endpoint}  # Herhangi bir endpoint
+
+# Detaylı okuma
+GET /logo/data/{endpoint}/{id}/full
+</div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <h3 style="color: #3498db;">✨ Özel Özellikler</h3>
+        <ul style="margin-left: 20px; color: #555;">
+            <li><strong>NUMBER = "~":</strong> Otomatik numaralama</li>
+            <li><strong>Tarih formatı:</strong> Otomatik DD.MM.YYYY dönüşümü</li>
+            <li><strong>TIME:</strong> Otomatik HHMMSS formatı</li>
+            <li><strong>Validation:</strong> DTO ile otomatik doğrulama</li>
+            <li><strong>Response:</strong> INTERNAL_REFERENCE ile tracking</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+let lastCreatedId = null;
+let lastCreatedEndpoint = null;
+
+// Form handler
+document.getElementById('logoPostForm').addEventListener('submit', handleLogoPostSubmit);
+document.getElementById('postOperation').addEventListener('change', handleOperationChange);
+document.getElementById('getFullDataBtn').addEventListener('click', getFullData);
+
+// Sayfa yüklendiğinde bugünün tarihini set et ve ilk form durumunu ayarla
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('orderDate').value = today;
+    
+    // İlk yüklemede sadece sales order formunu aktif et
+    handleOperationChange({target: {value: 'salesOrder'}});
+});
+
+function handleOperationChange(e) {
+    const operation = e.target.value;
+    const forms = document.querySelectorAll('.operation-form');
+    
+    // Tüm formları gizle ve required attribute'leri kaldır
+    forms.forEach(form => {
+        form.style.display = 'none';
+        // Gizli formlardaki required alanları deaktif et
+        form.querySelectorAll('[required]').forEach(input => {
+            input.removeAttribute('required');
+            input.setAttribute('data-was-required', 'true');
+        });
+    });
+    
+    // Aktif formu göster ve required attribute'leri geri ekle
+    const activeForm = document.getElementById(operation + 'Form');
+    activeForm.style.display = 'block';
+    activeForm.querySelectorAll('[data-was-required]').forEach(input => {
+        input.setAttribute('required', 'required');
+    });
+    
+    // Custom JSON için örnek veri yükle
+    if (operation === 'custom') {
+        loadCustomExample();
+    }
+}
+
+function loadCustomExample() {
+    const exampleJson = {
+        "INTERNAL_REFERENCE": 0,
+        "NUMBER": "~",
+        "DATE": new Date().toISOString().split('T')[0],
+        "ARP_CODE": "CARI.01",
+        "CURRSEL_TOTAL": 1,
+        "TRANSACTIONS": {
+            "items": [
+                {
+                    "TYPE": 0,
+                    "MASTER_CODE": "MALZEME.02",
+                    "QUANTITY": 5,
+                    "PRICE": 10,
+                    "VAT_RATE": 18,
+                    "UNIT_CODE": "ADET",
+                    "UNIT_CONV1": 1,
+                    "UNIT_CONV2": 1,
+                    "EDT_CURR": 1
+                }
+            ]
+        }
+    };
+    
+    document.getElementById('customJson').value = JSON.stringify(exampleJson, null, 2);
+    document.getElementById('customEndpoint').value = 'salesOrders';
+}
+
+async function handleLogoPostSubmit(e) {
+    e.preventDefault();
+    
+    if (!accessToken || isTokenExpired()) {
+        showError('Önce giriş yapmanız gerekiyor!');
+        return;
+    }
+
+    const operation = document.getElementById('postOperation').value;
+    let endpoint, requestData;
+
+    try {
+        switch (operation) {
+            case 'salesOrder':
+                [endpoint, requestData] = buildSalesOrderData();
+                break;
+            case 'item':
+                [endpoint, requestData] = buildItemData();
+                break;
+            case 'account':
+                [endpoint, requestData] = buildAccountData();
+                break;
+            case 'custom':
+                [endpoint, requestData] = buildCustomData();
+                break;
+            default:
+                throw new Error('Geçersiz işlem tipi');
+        }
+
+        showLoading('POST isteği gönderiliyor...');
+        
+        const response = await fetch(`/logo/${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        const result = await response.text();
+        displayResponse(response.status, response.statusText, result);
+        
+        if (response.ok) {
+            const resultObj = JSON.parse(result);
+            if (resultObj.INTERNAL_REFERENCE) {
+                lastCreatedId = resultObj.INTERNAL_REFERENCE;
+                lastCreatedEndpoint = endpoint;
+                
+                updateLastOperation(endpoint, lastCreatedId);
+                document.getElementById('getFullDataBtn').style.display = 'block';
+            }
+            showSuccess('POST işlemi başarılı!');
+        } else {
+            showError(`POST işlemi başarısız (${response.status})`);
+        }
+        
+    } catch (error) {
+        showError('POST işlemi hatası: ' + error.message);
+        displayResponse(0, 'Error', error.message);
+    }
+}
+
+function buildSalesOrderData() {
+    const lines = [];
+    const orderLines = document.querySelectorAll('.order-line');
+    
+    orderLines.forEach(line => {
+        lines.push({
+            TYPE: 0,
+            MASTER_CODE: line.querySelector('[name="masterCode"]').value,
+            QUANTITY: parseFloat(line.querySelector('[name="quantity"]').value),
+            PRICE: parseFloat(line.querySelector('[name="price"]').value),
+            VAT_RATE: parseFloat(line.querySelector('[name="vatRate"]').value),
+            UNIT_CODE: line.querySelector('[name="unitCode"]').value,
+            UNIT_CONV1: parseFloat(line.querySelector('[name="unitConv1"]').value) || 1,
+            UNIT_CONV2: parseFloat(line.querySelector('[name="unitConv2"]').value) || 1,
+            EDT_CURR: 1
+        });
+    });
+
+    const data = {
+        INTERNAL_REFERENCE: 0,
+        NUMBER: "~",
+        DATE: document.getElementById('orderDate').value,
+        ARP_CODE: document.getElementById('arpCode').value,
+        CURRSEL_TOTAL: 1,
+        TRANSACTIONS: {
+            items: lines
+        }
+    };
+
+    return ['salesOrders', data];
+}
+
+function buildItemData() {
+    const data = {
+        CODE: document.getElementById('itemCode').value,
+        NAME: document.getElementById('itemName').value,
+        UNIT_CODE: document.getElementById('itemUnit').value || 'ADET',
+        VAT_RATE: parseFloat(document.getElementById('itemVat').value) || 18,
+        CARDTYPE: 1
+    };
+
+    return ['items', data];
+}
+
+function buildAccountData() {
+    const data = {
+        CODE: document.getElementById('accountCode').value,
+        DEFINITION_: document.getElementById('accountName').value,
+        CITY: document.getElementById('accountCity').value || '',
+        CARDTYPE: parseInt(document.getElementById('accountType').value) || 0
+    };
+
+    return ['accounts', data];
+}
+
+function buildCustomData() {
+    const endpoint = document.getElementById('customEndpoint').value;
+    const jsonData = document.getElementById('customJson').value;
+    
+    if (!endpoint) {
+        throw new Error('Endpoint giriniz!');
+    }
+    
+    let data;
+    try {
+        data = JSON.parse(jsonData);
+    } catch (e) {
+        throw new Error('Geçersiz JSON formatı!');
+    }
+
+    return [endpoint, data];
+}
+
+function addOrderLine() {
+    const container = document.getElementById('orderLines');
+    const newLine = container.children[0].cloneNode(true);
+    
+    // Input değerlerini temizle
+    newLine.querySelectorAll('input').forEach(input => {
+        if (input.name !== 'unitConv1' && input.name !== 'unitConv2') {
+            input.value = '';
+        }
+    });
+    
+    // Silme butonu ekle
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'btn btn-danger';
+    deleteBtn.textContent = '🗑️ Sil';
+    deleteBtn.onclick = function() { container.removeChild(newLine); };
+    deleteBtn.style.marginTop = '10px';
+    
+    newLine.appendChild(deleteBtn);
+    container.appendChild(newLine);
+}
+
+async function getFullData() {
+    if (!lastCreatedId || !lastCreatedEndpoint) {
+        showError('Önce bir POST işlemi yapın!');
+        return;
+    }
+
+    try {
+        showLoading('Detaylı veri okunuyor...');
+        
+        const response = await fetch(`/logo/data/${lastCreatedEndpoint}/${lastCreatedId}/full`, {
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        });
+
+        const result = await response.text();
+        displayResponse(response.status, response.statusText, result);
+        
+        if (response.ok) {
+            showSuccess('Detaylı veri başarıyla okundu!');
+        } else {
+            showError(`Detaylı veri okunamadı (${response.status})`);
+        }
+        
+    } catch (error) {
+        showError('Detaylı veri okuma hatası: ' + error.message);
+    }
+}
+
+function updateLastOperation(endpoint, id) {
+    const info = `
+        <strong>✅ Son İşlem:</strong> ${endpoint}<br>
+        <strong>🆔 ID:</strong> ${id}<br>
+        <strong>🕒 Zaman:</strong> ${new Date().toLocaleTimeString('tr-TR')}
+    `;
+    document.getElementById('lastOperation').innerHTML = info;
+}
+</script>

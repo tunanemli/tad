@@ -1,0 +1,149 @@
+<div class="grid">
+    <!-- Authentication Form -->
+    <div class="card">
+        <h2>🔐 Kimlik Doğrulama</h2>
+        <p style="color: #7f8c8d; margin-bottom: 20px;">
+            Logo ERP API'ye bağlanmak için kullanıcı bilgilerinizi girin.
+        </p>
+        
+        <form id="authForm">
+            <div class="form-group">
+                <label for="username">👤 Kullanıcı Adı:</label>
+                <input type="text" id="username" name="username" class="form-control" required
+                       placeholder="Kullanıcı adınızı girin">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">🔑 Şifre:</label>
+                <input type="password" id="password" name="password" class="form-control" required
+                       placeholder="Şifrenizi girin">
+            </div>
+            
+            <div class="form-group">
+                <label for="firmno">🏢 Firma Numarası:</label>
+                <input type="text" id="firmno" name="firmno" class="form-control" required
+                       placeholder="Firma numaranızı girin" value="001">
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    🚀 Token Al
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Current Status -->
+    <div class="card">
+        <h2>📊 Token Durumu</h2>
+        <div id="statusDisplay">
+            <div class="status warning">⏳ Token durumu kontrol ediliyor...</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="tokenDisplay">Mevcut Access Token:</label>
+            <textarea id="tokenDisplay" class="form-control" rows="4" readonly 
+                      placeholder="Token burada görünecek..."></textarea>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button type="button" id="clearToken" class="btn btn-danger" style="width: 100%; margin-bottom: 10px;">
+                🗑️ Token Temizle
+            </button>
+            <button type="button" onclick="copyToClipboard(document.getElementById('tokenDisplay').value)" 
+                    class="btn btn-warning" style="width: 100%;">
+                📋 Token Kopyala
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- API Integration Guide -->
+<div class="card">
+    <h2>📚 API Entegrasyon Kılavuzu</h2>
+    
+    <div class="grid">
+        <div>
+            <h3 style="color: #3498db; margin-bottom: 15px;">1️⃣ Token Alma (C# Karşılığı)</h3>
+            <div class="code">
+// C# Orijinal Kod
+string token = getAccessToken(
+    "https://api.logo.com.tr/oauth/token",
+    "kullanici_adi", 
+    "sifre", 
+    "001"
+);
+
+// NestJS API Çağrısı (JavaScript)
+const response = await fetch('/auth/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        username: 'kullanici_adi',
+        password: 'sifre',
+        firmno: '001'
+    })
+});
+const { access_token } = await response.json();</div>
+        </div>
+        
+        <div>
+            <h3 style="color: #27ae60; margin-bottom: 15px;">2️⃣ API Kullanımı</h3>
+            <div class="code">
+// C# Orijinal Kod
+string result = HttpGet(
+    "https://api.logo.com.tr/endpoint", 
+    token
+);
+
+// NestJS API Çağrısı
+const response = await fetch('/api/data/endpoint', {
+    headers: {
+        'Authorization': 'Bearer ' + access_token
+    }
+});
+const result = await response.json();</div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <h3 style="color: #e74c3c; margin-bottom: 15px;">⚠️ Önemli Notlar</h3>
+        <ul style="margin-left: 20px; color: #555;">
+            <li><strong>Client ID & Secret:</strong> Bu bilgiler Logo Çözüm Ortaklarına sağlanır</li>
+            <li><strong>Token Süresi:</strong> Tokenlar belirli bir süre sonra geçerliliğini yitirir</li>
+            <li><strong>HTTPS:</strong> Production ortamında mutlaka HTTPS kullanın</li>
+            <li><strong>Güvenlik:</strong> Token'ları güvenli bir şekilde saklayın</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Request/Response Examples -->
+<div class="card">
+    <h2>📝 Request/Response Örnekleri</h2>
+    
+    <div style="margin-bottom: 20px;">
+        <h3 style="color: #9b59b6;">📤 Token İsteği</h3>
+        <div class="code">
+POST /auth/token
+Content-Type: application/json
+
+{
+  "username": "demo_user",
+  "password": "demo_pass",
+  "firmno": "001"
+}</div>
+    </div>
+    
+    <div>
+        <h3 style="color: #1abc9c;">📥 Token Yanıtı</h3>
+        <div class="code">
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600
+}</div>
+    </div>
+</div>
