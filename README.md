@@ -1,31 +1,34 @@
-# NestJS REST API Client
+# NestJS Logo REST API Entegrasyonu
 
-Bu proje, C# REST client kodunun NestJS'e uyarlanmış versiyonudur. Logo ERP REST API'leri ile çalışmak için gerekli tüm HTTP metodlarını ve authentication yapısını içerir.
+Logo ERP sistemi ile entegrasyon için geliştirilmiş NestJS tabanlı REST API uygulaması.
 
-## 📋 Özellikler
+## 🚀 Özellikler
 
-✅ **Authentication System**
-- Bearer token ile kimlik doğrulama
-- Token süresi takibi
-- Otomatik token yenileme hazırlığı
+- ✅ **Authentication Service** - Logo API token yönetimi
+- ✅ **HTTP Client Service** - Tüm REST operasyonları (GET, POST, PUT, PATCH, DELETE)
+- ✅ **Logo API Endpoints** - Pagination desteğiyle GET/POST işlemleri
+- ✅ **Web Interface** - Handlebars templates ile test arayüzü
+- ✅ **DTO Validation** - class-validator ile veri doğrulama
+- ✅ **Special Value Processing** - NUMBER='~' ve tarih formatı işleme
+- ✅ **Error Handling** - Kapsamlı hata yönetimi
+- ✅ **Environment Configuration** - Güvenli konfigürasyon
 
-✅ **HTTP Client Methods**
-- GET, POST, PUT, PATCH, DELETE metodları
-- Otomatik error handling
-- Bearer token otomasyonu
+## 🛠️ Teknolojiler
 
-✅ **C# Kod Uyumluluğu**
-- Orijinal C# metodlarının birebir karşılıkları
-- Aynı parametre yapısı
-- Benzer hata yönetimi
+- **NestJS** - Node.js framework
+- **TypeScript** - Type-safe development
+- **Handlebars** - Template engine
+- **Axios** - HTTP client
+- **class-validator** - DTO validation
+- **class-transformer** - Data transformation
 
-## 🚀 Kurulum
+## 📦 Kurulum
 
 ```bash
-# Bağımlılıkları yükle
+# Dependencies'leri yükle
 npm install
 
-# Uygulamayı geliştirme modunda çalıştır
+# Development modunda çalıştır
 npm run start:dev
 
 # Production build
@@ -33,185 +36,68 @@ npm run build
 npm run start:prod
 ```
 
+## 🌐 Endpoints
+
+### Web Interface
+- `GET /web` - Ana sayfa
+- `GET /web/auth` - Authentication sayfası
+- `GET /web/logo-test` - Logo GET API test
+- `GET /web/logo-post` - Logo POST API test
+- `GET /web/api-test` - Genel API test
+
+### Authentication
+- `POST /auth/token` - Logo API token al
+- `GET /auth/status` - Token durumu
+- `POST /auth/logout` - Çıkış yap
+
+### Logo API
+- `GET /logo/items` - Malzeme listesi
+- `GET /logo/accounts` - Cari listesi
+- `GET /logo/orders` - Sipariş listesi
+- `POST /logo/salesOrders` - Satış siparişi oluştur
+- `POST /logo/items` - Malzeme oluştur
+- `POST /logo/accounts` - Cari oluştur
+
+### Generic API
+- `GET /api/data/:endpoint` - Genel GET
+- `POST /api/data/:endpoint` - Genel POST
+- `PUT /api/data/:endpoint` - Genel PUT
+- `PATCH /api/data/:endpoint` - Genel PATCH
+- `DELETE /api/data/:endpoint` - Genel DELETE
+
 ## ⚙️ Konfigürasyon
 
-`.env` dosyası oluşturun:
+Environment variables (.env dosyası):
 
 ```env
-CLIENT_ID=LOGO
-CLIENT_SECRET=your_client_secret_here
-BASE_URL=https://api.logo.com.tr
+CLIENT_ID=your_logo_client_id
+CLIENT_SECRET=your_logo_client_secret
+BASE_URL=http://your_logo_server:port
 PORT=3000
 ```
 
-## 📡 API Endpoints
+## 🔒 Güvenlik
 
-### Authentication
+- Private repository
+- Environment variables ile sensitive data
+- .gitignore ile .env dosyaları korunur
+- Token-based authentication
 
-#### Token Alma
-```http
-POST /auth/token
-Content-Type: application/json
+## 📝 Kullanım
 
-{
-  "username": "kullanici_adi",
-  "password": "sifre", 
-  "firmno": "firma_numarasi"
-}
-```
+1. Logo sunucu bilgilerini `.env` dosyasında ayarlayın
+2. `npm run start:dev` ile uygulamayı çalıştırın
+3. `http://localhost:3000/web` adresinden web arayüzüne erişin
+4. Authentication sayfasından Logo'ya giriş yapın
+5. GET/POST işlemlerini test edin
 
-**Yanıt:**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "token_type": "Bearer",
-  "expires_in": 3600
-}
-```
+## 🤝 Katkı
 
-#### Token Durumu
-```http
-GET /auth/status
-```
+1. Fork yapın
+2. Feature branch oluşturun
+3. Commit'lerinizi yapın
+4. Pull request gönderin
 
-#### Logout
-```http
-POST /auth/logout
-```
+## 📄 Lisans
 
-### API İstekleri
-
-Tüm API istekleri için Authorization header gereklidir:
-
-```http
-Authorization: Bearer YOUR_ACCESS_TOKEN
-```
-
-#### GET İsteği
-```http
-GET /api/data/{endpoint}
-Authorization: Bearer YOUR_ACCESS_TOKEN
-```
-
-#### POST İsteği
-```http
-POST /api/data/{endpoint}
-Authorization: Bearer YOUR_ACCESS_TOKEN
-Content-Type: application/json
-
-{
-  "data": "your_data_here"
-}
-```
-
-#### PUT İsteği
-```http
-PUT /api/data/{endpoint}
-Authorization: Bearer YOUR_ACCESS_TOKEN
-Content-Type: application/json
-
-{
-  "data": "your_updated_data"
-}
-```
-
-#### PATCH İsteği
-```http
-PATCH /api/data/{endpoint}
-Authorization: Bearer YOUR_ACCESS_TOKEN
-Content-Type: application/json
-
-{
-  "data": "your_partial_update"
-}
-```
-
-#### DELETE İsteği
-```http
-DELETE /api/data/{endpoint}
-Authorization: Bearer YOUR_ACCESS_TOKEN
-```
-
-## 🏗️ Proje Yapısı
-
-```
-src/
-├── auth/                    # Authentication modülü
-│   ├── dto/                # Data Transfer Objects
-│   ├── auth.controller.ts  # Auth endpoints
-│   ├── auth.service.ts     # Token yönetimi
-│   └── auth.module.ts      # Auth modül konfigürasyonu
-├── api/                    # API client modülü
-│   ├── api.controller.ts   # REST method endpoints
-│   └── api.module.ts       # API modül konfigürasyonu
-├── common/                 # Ortak servisler
-│   ├── http-client.service.ts  # HTTP client servisi
-│   └── common.module.ts    # Common modül konfigürasyonu
-├── config/                 # Konfigürasyon
-│   └── app.config.ts       # Uygulama konfigürasyonu
-├── app.module.ts           # Ana modül
-└── main.ts                 # Uygulama başlangıcı
-```
-
-## 🔄 C# Kodundan Dönüşüm
-
-### Orijinal C# Metodları ➡️ NestJS Karşılıkları
-
-| C# Metod | NestJS Servis | Açıklama |
-|----------|---------------|----------|
-| `getAccessToken()` | `AuthService.getAccessToken()` | Token alma |
-| `HttpGet()` | `HttpClientService.httpGet()` | GET istekleri |
-| `HttpPost()` | `HttpClientService.httpPost()` | POST istekleri |
-| `HttpPut()` | `HttpClientService.httpPut()` | PUT istekleri |
-| `HttpPatch()` | `HttpClientService.httpPatch()` | PATCH istekleri |
-
-### Kullanım Örneği
-
-**C# Kodu:**
-```csharp
-string token = getAccessToken(url, username, password, firmNr);
-string result = HttpGet("https://api.logo.com.tr/endpoint", token);
-```
-
-**NestJS Karşılığı:**
-```typescript
-const token = await this.authService.getAccessToken({
-  username, password, firmno
-});
-const result = await this.httpClientService.httpGet(
-  'https://api.logo.com.tr/endpoint', 
-  token
-);
-```
-
-## 🛠️ Geliştirme
-
-### Yeni Endpoint Ekleme
-
-1. DTO oluşturun (gerekirse)
-2. Controller'a yeni metod ekleyin
-3. Service katmanında business logic uygulayın
-
-### Hata Yönetimi
-
-Tüm HTTP istekleri otomatik error handling ile gelir:
-- 401: Token geçersiz
-- Network errors: Bağlantı hataları
-- API errors: Server yanıt hataları
-
-## 📝 Notlar
-
-- Token'lar otomatik olarak memory'de saklanır
-- Production'da Redis/Database kullanımı önerilir
-- CORS varsayılan olarak aktiftir
-- Validation pipe'ları aktiftir
-
-## 🔗 Faydalı Linkler
-
-- [NestJS Docs](https://docs.nestjs.com/)
-- [Axios HTTP Client](https://axios-http.com/)
-- [Class Validator](https://github.com/typestack/class-validator)
-
----
-
-Bu API, Logo ERP REST servislerini kullanmak için gerekli tüm temel yapıyı sağlar. 🚀
+ISC
