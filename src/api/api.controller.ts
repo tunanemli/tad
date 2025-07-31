@@ -23,7 +23,7 @@ export class ApiController {
       return { error: 'Token gerekli' };
     }
 
-    const url = `${this.getBaseUrl()}/${endpoint}`;
+    const url = `${this.getBaseUrl()}${endpoint}`;
     return await this.httpClientService.httpGet(url, token);
   }
 
@@ -42,7 +42,7 @@ export class ApiController {
       return { error: 'Token gerekli' };
     }
 
-    const url = `${this.getBaseUrl()}/${endpoint}`;
+    const url = `${this.getBaseUrl()}${endpoint}`;
     return await this.httpClientService.httpPost(url, data, token);
   }
 
@@ -61,7 +61,7 @@ export class ApiController {
       return { error: 'Token gerekli' };
     }
 
-    const url = `${this.getBaseUrl()}/${endpoint}`;
+    const url = `${this.getBaseUrl()}${endpoint}`;
     return await this.httpClientService.httpPut(url, data, token);
   }
 
@@ -80,7 +80,7 @@ export class ApiController {
       return { error: 'Token gerekli' };
     }
 
-    const url = `${this.getBaseUrl()}/${endpoint}`;
+    const url = `${this.getBaseUrl()}${endpoint}`;
     return await this.httpClientService.httpPatch(url, data, token);
   }
 
@@ -98,7 +98,7 @@ export class ApiController {
       return { error: 'Token gerekli' };
     }
 
-    const url = `${this.getBaseUrl()}/${endpoint}`;
+    const url = `${this.getBaseUrl()}${endpoint}`;
     return await this.httpClientService.httpDelete(url, token);
   }
 

@@ -38,5 +38,10 @@ export interface PaginatedResult<T> {
     total?: number;
     hasNext: boolean;
     hasPrev: boolean;
+    // Logo API'den gelen ek bilgiler
+    apiMeta?: any;
+    first?: any;
+    next?: any;
+    previous?: any;
   };
 }

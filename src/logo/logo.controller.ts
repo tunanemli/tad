@@ -93,6 +93,28 @@ export class LogoController {
   }
 
   /**
+   * Satın Alma Siparişleri Listesi
+   */
+  @Get('purchaseOrders')
+  async getPurchaseOrders(
+    @Query() query: LogoQueryDto,
+    @Headers('authorization') authHeader?: string,
+  ): Promise<PaginatedResult<any>> {
+    return this.logoService.getPurchaseOrders(query, authHeader);
+  }
+
+  /**
+   * Tek Satın Alma Siparişi Okuma
+   */
+  @Get('purchaseOrders/:id')
+  async getPurchaseOrder(
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('authorization') authHeader?: string,
+  ): Promise<any> {
+    return this.logoService.getPurchaseOrder(id, authHeader);
+  }
+
+  /**
    * Fatura Fişleri Listesi
    */
   @Get('invoices')

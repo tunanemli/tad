@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satın Alma Modülü Test</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .endpoint {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .response {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .success {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+        }
+        .form-group {
+            margin: 10px 0;
+        }
+        .form-group label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+        .btn {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background-color: #1976D2;
+        }
+        .btn-danger {
+            background-color: #f44336;
+        }
+        .btn-success {
+            background-color: #4CAF50;
+        }
+        .token-section {
+            background-color: #fff3e0;
+            border-color: #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Satın Alma Modülü Test Sayfası</h1>
+        
+        <!-- Token Alma Bölümü -->
+        <div class="test-section token-section">
+            <h2>🔑 Token Alma</h2>
+            <div class="form-group">
+                <label>Client ID:</label>
+                <input type="text" id="clientId" value="dummy_data">
+            </div>
+            <div class="form-group">
+                <label>Client Secret:</label>
+                <input type="text" id="clientSecret" value="dummy_data">
+            </div>
+            <button class="btn" onclick="getToken()">Token Al</button>
+            <div class="endpoint">POST /auth/token</div>
+            <div id="tokenResponse" class="response"></div>
+        </div>
+
+        <!-- Satın Alma Siparişleri Bölümü -->
+        <div class="test-section">
+            <h2>📋 Satın Alma Siparişleri</h2>
+            <div class="form-group">
+                <label>Offset:</label>
+                <input type="number" id="ordersOffset" value="0">
+            </div>
+            <div class="form-group">
+                <label>Limit:</label>
+                <input type="number" id="ordersLimit" value="10">
+            </div>
+            <div class="form-group">
+                <label>Search:</label>
+                <input type="text" id="ordersSearch" placeholder="Arama terimi">
+            </div>
+            <button class="btn" onclick="getPurchaseOrders()">Siparişleri Getir</button>
+            <button class="btn btn-success" onclick="getPurchaseOrderById()">Tek Sipariş Getir</button>
+            <div class="form-group">
+                <label>Sipariş ID:</label>
+                <input type="number" id="orderId" value="6">
+            </div>
+            <div class="endpoint">GET /purchase/orders</div>
+            <div id="ordersResponse" class="response"></div>
+        </div>
+
+        <!-- Genel Data Endpoint Bölümü -->
+        <div class="test-section">
+            <h2>🌐 Genel Data Endpoint</h2>
+            <div class="form-group">
+                <label>Endpoint:</label>
+                <input type="text" id="dataEndpoint" value="purchaseOrders">
+            </div>
+            <div class="form-group">
+                <label>Offset:</label>
+                <input type="number" id="dataOffset" value="0">
+            </div>
+            <div class="form-group">
+                <label>Limit:</label>
+                <input type="number" id="dataLimit" value="10">
+            </div>
+            <button class="btn" onclick="getData()">Data Getir</button>
+            <button class="btn btn-success" onclick="getDataById()">Tek Kayıt Getir</button>
+            <div class="form-group">
+                <label>Kayıt ID:</label>
+                <input type="number" id="dataId" value="6">
+            </div>
+            <div class="endpoint">GET /purchase/data/:endpoint</div>
+            <div id="dataResponse" class="response"></div>
+        </div>
+
+        <!-- Detaylı Sipariş Bölümü -->
+        <div class="test-section">
+            <h2>🔍 Detaylı Sipariş Bilgisi</h2>
+            <div class="form-group">
+                <label>Sipariş ID:</label>
+                <input type="number" id="fullOrderId" value="6">
+            </div>
+            <button class="btn" onclick="getPurchaseOrderFull()">Detaylı Bilgi Getir</button>
+            <div class="endpoint">GET /purchase/orders/:id/full</div>
+            <div id="fullOrderResponse" class="response"></div>
+        </div>
+
+        <!-- Token Durumu Bölümü -->
+        <div class="test-section">
+            <h2>📊 Token Durumu</h2>
+            <button class="btn" onclick="getTokenStatus()">Token Durumunu Kontrol Et</button>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+            <div class="endpoint">GET /auth/status</div>
+            <div id="tokenStatusResponse" class="response"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentToken = '';
+
+        // Token alma
+        async function getToken() {
+            const clientId = document.getElementById('clientId').value;
+            const clientSecret = document.getElementById('clientSecret').value;
+            const responseDiv = document.getElementById('tokenResponse');
+
+            try {
+                const response = await fetch('/auth/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        username: clientId, 
+                        password: clientSecret, 
+                        firmno: '1' 
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentToken = data.access_token;
+                    responseDiv.className = 'response success';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    responseDiv.className = 'response error';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Hata: ' + error.message;
+            }
+        }
+
+        // Satın alma siparişleri listesi
+        async function getPurchaseOrders() {
+            const offset = document.getElementById('ordersOffset').value;
+            const limit = document.getElementById('ordersLimit').value;
+            const search = document.getElementById('ordersSearch').value;
+            const responseDiv = document.getElementById('ordersResponse');
+
+            const params = new URLSearchParams();
+            if (offset) params.append('offset', offset);
+            if (limit) params.append('limit', limit);
+            if (search) params.append('search', search);
+
+            try {
+                const response = await fetch(`/purchase/orders?${params}`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.className = 'response success';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    responseDiv.className = 'response error';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Hata: ' + error.message;
+            }
+        }
+
+        // Tek satın alma siparişi
+        async function getPurchaseOrderById() {
+            const id = document.getElementById('orderId').value;
+            const responseDiv = document.getElementById('ordersResponse');
+
+            try {
+                const response = await fetch(`/purchase/orders/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.className = 'response success';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    responseDiv.className = 'response error';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Hata: ' + error.message;
+            }
+        }
+
+        // Genel data endpoint
+        async function getData() {
+            const endpoint = document.getElementById('dataEndpoint').value;
+            const offset = document.getElementById('dataOffset').value;
+            const limit = document.getElementById('dataLimit').value;
+            const responseDiv = document.getElementById('dataResponse');
+
+            const params = new URLSearchParams();
+            if (offset) params.append('offset', offset);
+            if (limit) params.append('limit', limit);
+
+            try {
+                const response = await fetch(`/purchase/data/${endpoint}?${params}`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.className = 'response success';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    responseDiv.className = 'response error';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Hata: ' + error.message;
+            }
+        }
+
+        // Genel data endpoint tek kayıt
+        async function getDataById() {
+            const endpoint = document.getElementById('dataEndpoint').value;
+            const id = document.getElementById('dataId').value;
+            const responseDiv = document.getElementById('dataResponse');
+
+            try {
+                const response = await fetch(`/purchase/data/${endpoint}/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.className = 'response success';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    responseDiv.className = 'response error';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Hata: ' + error.message;
+            }
+        }
+
+        // Detaylı sipariş bilgisi
+        async function getPurchaseOrderFull() {
+            const id = document.getElementById('fullOrderId').value;
+            const responseDiv = document.getElementById('fullOrderResponse');
+
+            try {
+                const response = await fetch(`/purchase/orders/${id}/full`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.className = 'response success';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    responseDiv.className = 'response error';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Hata: ' + error.message;
+            }
+        }
+
+        // Token durumu kontrol
+        async function getTokenStatus() {
+            const responseDiv = document.getElementById('tokenStatusResponse');
+
+            try {
+                const response = await fetch('/auth/status');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.className = 'response success';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    responseDiv.className = 'response error';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Hata: ' + error.message;
+            }
+        }
+
+        // Logout
+        async function logout() {
+            const responseDiv = document.getElementById('tokenStatusResponse');
+
+            try {
+                const response = await fetch('/auth/logout', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentToken = '';
+                    responseDiv.className = 'response success';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    responseDiv.className = 'response error';
+                    responseDiv.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Hata: ' + error.message;
+            }
+        }
+
+        // Sayfa yüklendiğinde token durumunu kontrol et
+        window.onload = function() {
+            getTokenStatus();
+        };
+    </script>
+</body>
+</html> 

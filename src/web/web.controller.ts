@@ -61,4 +61,34 @@ export class WebController {
       isLogoPost: true,
     };
   }
+
+  /**
+   * Satın alma modülü test sayfası
+   */
+  @Get('purchase-test')
+  @Render('purchase-test')
+  getPurchaseTest() {
+    return {
+      title: 'Satın Alma Modülü Test',
+      isPurchaseTest: true,
+    };
+  }
+
+  @Get('sales-invoice-test')
+  @Render('sales-invoice-test')
+  getSalesInvoiceTest() {
+    return {
+      title: 'Satış Faturaları Modülü Test',
+      isSalesInvoiceTest: true,
+    };
+  }
+
+  @Get('purchase-invoice-test')
+  @Render('purchase-invoice-test')
+  getPurchaseInvoiceTest() {
+    return {
+      title: 'Satın Alma Faturaları Modülü Test',
+      isPurchaseInvoiceTest: true,
+    };
+  }
 }

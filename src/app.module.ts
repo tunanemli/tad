@@ -7,6 +7,9 @@ import { CommonModule } from './common/common.module';
 import { ApiModule } from './api/api.module';
 import { WebModule } from './web/web.module';
 import { LogoModule } from './logo/logo.module';
+import { PurchaseModule } from './purchase/purchase.module';
+import { SalesInvoiceModule } from './sales-invoice/sales-invoice.module';
+import { PurchaseInvoiceModule } from './purchase-invoice/purchase-invoice.module';
 import { appConfig } from './config/app.config';
 
 @Module({
@@ -20,6 +23,9 @@ import { appConfig } from './config/app.config';
     ApiModule,
     WebModule,
     LogoModule,
+    PurchaseModule,
+    SalesInvoiceModule,
+    PurchaseInvoiceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

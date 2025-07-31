@@ -35,7 +35,7 @@ export class AuthService {
       formData.append('password', encodeURIComponent(authRequest.password));
 
       const response = await firstValueFrom(
-        this.httpService.post(`${baseUrl}/oauth/token`, formData.toString(), {
+        this.httpService.post(`${baseUrl}/token`, formData.toString(), {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',

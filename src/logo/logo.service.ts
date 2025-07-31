@@ -24,7 +24,7 @@ export class LogoService {
    * Malzeme kartları listesi - C# dokümantasyonundaki örnek
    */
   async getItems(query: LogoQueryDto, authHeader?: string): Promise<PaginatedResult<any>> {
-    const endpoint = 'items';
+    const endpoint = 'purchaseOrders';
     return this.getDataList(endpoint, query, authHeader);
   }
 
@@ -40,7 +40,7 @@ export class LogoService {
    * Cari kartları listesi
    */
   async getAccounts(query: LogoQueryDto, authHeader?: string): Promise<PaginatedResult<any>> {
-    const endpoint = 'accounts';
+    const endpoint = 'services/Arps';
     return this.getDataList(endpoint, query, authHeader);
   }
 
@@ -81,6 +81,22 @@ export class LogoService {
    */
   async getInvoice(id: number, authHeader?: string): Promise<any> {
     const endpoint = `invoices/${id}`;
+    return this.getSingleData(endpoint, authHeader);
+  }
+
+  /**
+   * Satın alma siparişleri listesi
+   */
+  async getPurchaseOrders(query: LogoQueryDto, authHeader?: string): Promise<PaginatedResult<any>> {
+    const endpoint = 'purchaseOrders';
+    return this.getDataList(endpoint, query, authHeader);
+  }
+
+  /**
+   * Tek satın alma siparişi okuma
+   */
+  async getPurchaseOrder(id: number, authHeader?: string): Promise<any> {
+    const endpoint = `purchaseOrders/${id}`;
     return this.getSingleData(endpoint, authHeader);
   }
 
@@ -441,6 +457,6 @@ export class LogoService {
   private getLogoApiUrl(): string {
     // Dokümantasyondaki örnekteki URL formatı
     // Gerçek projede config'den alınabilir
-    return this.configService.get<string>('baseUrl') || 'http://172.16.57.114:32001';
+    return this.configService.get<string>('baseUrl') || 'http://192.168.1.203:32003';
   }
 }
