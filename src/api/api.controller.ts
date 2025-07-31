@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Put, Patch, Delete, Body, Param, Query, UseGuards, Headers } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiHeader, ApiBody } from '@nestjs/swagger';
 import { HttpClientService } from '../common/http-client.service';
 import { AuthService } from '../auth/auth.service';
 
+@ApiTags('api')
 @Controller('api')
 export class ApiController {
   constructor(
@@ -12,6 +14,11 @@ export class ApiController {
   /**
    * GET isteği örneği - C# HttpGet metodunun kullanımı
    */
+  @ApiOperation({ summary: 'Genel GET endpoint', description: 'Herhangi bir Logo endpoint\'inden veri getirir' })
+  @ApiParam({ name: 'endpoint', description: 'Logo endpoint adı', example: 'items' })
+  @ApiHeader({ name: 'authorization', description: 'Bearer token', required: false })
+  @ApiResponse({ status: 200, description: 'Veri başarıyla getirildi' })
+  @ApiResponse({ status: 401, description: 'Token gerekli veya geçersiz' })
   @Get('data/:endpoint')
   async getData(
     @Param('endpoint') endpoint: string,
@@ -30,6 +37,12 @@ export class ApiController {
   /**
    * POST isteği örneği - C# HttpPost metodunun kullanımı
    */
+  @ApiOperation({ summary: 'Genel POST endpoint', description: 'Herhangi bir Logo endpoint\'ine veri gönderir' })
+  @ApiParam({ name: 'endpoint', description: 'Logo endpoint adı', example: 'salesOrders' })
+  @ApiBody({ description: 'Gönderilecek veri' })
+  @ApiHeader({ name: 'authorization', description: 'Bearer token', required: false })
+  @ApiResponse({ status: 201, description: 'Veri başarıyla oluşturuldu' })
+  @ApiResponse({ status: 401, description: 'Token gerekli veya geçersiz' })
   @Post('data/:endpoint')
   async postData(
     @Param('endpoint') endpoint: string,
@@ -49,6 +62,12 @@ export class ApiController {
   /**
    * PUT isteği örneği - C# HttpPut metodunun kullanımı
    */
+  @ApiOperation({ summary: 'Genel PUT endpoint', description: 'Herhangi bir Logo endpoint\'indeki veriyi günceller' })
+  @ApiParam({ name: 'endpoint', description: 'Logo endpoint adı', example: 'items/5' })
+  @ApiBody({ description: 'Güncellenecek veri' })
+  @ApiHeader({ name: 'authorization', description: 'Bearer token', required: false })
+  @ApiResponse({ status: 200, description: 'Veri başarıyla güncellendi' })
+  @ApiResponse({ status: 401, description: 'Token gerekli veya geçersiz' })
   @Put('data/:endpoint')
   async putData(
     @Param('endpoint') endpoint: string,
@@ -68,6 +87,12 @@ export class ApiController {
   /**
    * PATCH isteği örneği - C# HttpPatch metodunun kullanımı
    */
+  @ApiOperation({ summary: 'Genel PATCH endpoint', description: 'Herhangi bir Logo endpoint\'indeki veriyi kısmen günceller' })
+  @ApiParam({ name: 'endpoint', description: 'Logo endpoint adı', example: 'items/5' })
+  @ApiBody({ description: 'Güncellenecek veri alanları' })
+  @ApiHeader({ name: 'authorization', description: 'Bearer token', required: false })
+  @ApiResponse({ status: 200, description: 'Veri başarıyla güncellendi' })
+  @ApiResponse({ status: 401, description: 'Token gerekli veya geçersiz' })
   @Patch('data/:endpoint')
   async patchData(
     @Param('endpoint') endpoint: string,
@@ -87,6 +112,11 @@ export class ApiController {
   /**
    * DELETE isteği örneği
    */
+  @ApiOperation({ summary: 'Genel DELETE endpoint', description: 'Herhangi bir Logo endpoint\'indeki veriyi siler' })
+  @ApiParam({ name: 'endpoint', description: 'Logo endpoint adı', example: 'items/5' })
+  @ApiHeader({ name: 'authorization', description: 'Bearer token', required: false })
+  @ApiResponse({ status: 200, description: 'Veri başarıyla silindi' })
+  @ApiResponse({ status: 401, description: 'Token gerekli veya geçersiz' })
   @Delete('data/:endpoint')
   async deleteData(
     @Param('endpoint') endpoint: string,

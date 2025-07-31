@@ -1,10 +1,14 @@
 import { Controller, Get, Render } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('web')
 @Controller('web')
 export class WebController {
   /**
    * Ana sayfa - Dashboard
    */
+  @ApiOperation({ summary: 'Ana sayfa', description: 'Web arayüzü ana sayfasını gösterir' })
+  @ApiResponse({ status: 200, description: 'Ana sayfa başarıyla yüklendi' })
   @Get()
   @Render('index')
   getHome() {
@@ -17,6 +21,8 @@ export class WebController {
   /**
    * Kimlik doğrulama sayfası
    */
+  @ApiOperation({ summary: 'Kimlik doğrulama sayfası', description: 'Logo API token alma sayfasını gösterir' })
+  @ApiResponse({ status: 200, description: 'Kimlik doğrulama sayfası başarıyla yüklendi' })
   @Get('auth')
   @Render('auth')
   getAuth() {
@@ -29,6 +35,8 @@ export class WebController {
   /**
    * API test arayüzü sayfası
    */
+  @ApiOperation({ summary: 'API test sayfası', description: 'Genel API test arayüzünü gösterir' })
+  @ApiResponse({ status: 200, description: 'API test sayfası başarıyla yüklendi' })
   @Get('api-test')
   @Render('api-test')
   getApiTest() {
@@ -41,6 +49,8 @@ export class WebController {
   /**
    * Logo REST API test sayfası
    */
+  @ApiOperation({ summary: 'Logo API test sayfası', description: 'Logo GET API test arayüzünü gösterir' })
+  @ApiResponse({ status: 200, description: 'Logo API test sayfası başarıyla yüklendi' })
   @Get('logo-test')
   @Render('logo-test')
   getLogoTest() {
@@ -53,6 +63,8 @@ export class WebController {
   /**
    * Logo POST API test sayfası
    */
+  @ApiOperation({ summary: 'Logo POST API sayfası', description: 'Logo POST API test arayüzünü gösterir' })
+  @ApiResponse({ status: 200, description: 'Logo POST API sayfası başarıyla yüklendi' })
   @Get('logo-post')
   @Render('logo-post')
   getLogoPost() {
@@ -65,6 +77,8 @@ export class WebController {
   /**
    * Satın alma modülü test sayfası
    */
+  @ApiOperation({ summary: 'Satın alma test sayfası', description: 'Satın alma modülü test arayüzünü gösterir' })
+  @ApiResponse({ status: 200, description: 'Satın alma test sayfası başarıyla yüklendi' })
   @Get('purchase-test')
   @Render('purchase-test')
   getPurchaseTest() {
@@ -74,6 +88,8 @@ export class WebController {
     };
   }
 
+  @ApiOperation({ summary: 'Satış faturaları test sayfası', description: 'Satış faturaları modülü test arayüzünü gösterir' })
+  @ApiResponse({ status: 200, description: 'Satış faturaları test sayfası başarıyla yüklendi' })
   @Get('sales-invoice-test')
   @Render('sales-invoice-test')
   getSalesInvoiceTest() {
@@ -83,6 +99,8 @@ export class WebController {
     };
   }
 
+  @ApiOperation({ summary: 'Satın alma faturaları test sayfası', description: 'Satın alma faturaları modülü test arayüzünü gösterir' })
+  @ApiResponse({ status: 200, description: 'Satın alma faturaları test sayfası başarıyla yüklendi' })
   @Get('purchase-invoice-test')
   @Render('purchase-invoice-test')
   getPurchaseInvoiceTest() {
