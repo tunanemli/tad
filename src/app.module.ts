@@ -11,6 +11,7 @@ import { PurchaseModule } from './purchase/purchase.module';
 import { SalesInvoiceModule } from './sales-invoice/sales-invoice.module';
 import { PurchaseInvoiceModule } from './purchase-invoice/purchase-invoice.module';
 import { appConfig } from './config/app.config';
+import { ItemsModule } from './items/items.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { appConfig } from './config/app.config';
     PurchaseModule,
     SalesInvoiceModule,
     PurchaseInvoiceModule,
+    ItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
